@@ -1,0 +1,41 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReverseFlow - Customers</title>
+</head>
+<body>
+
+    <h1>Customer Details</h1>
+
+    <table border="1" cellpadding="10">
+
+        <tr>
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.customer_id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No customers found.</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <a href="/dashboard/">Back to Dashboard</a>
+
+</body>
+</html>
+```

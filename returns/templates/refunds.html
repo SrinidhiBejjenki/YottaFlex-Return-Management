@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReverseFlow Refunds</title>
+</head>
+<body>
+
+    <h1>Refund Details</h1>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Refund ID</th>
+            <th>Return ID</th>
+            <th>Amount</th>
+            <th>Refund Date</th>
+            <th>Status</th>
+            <th>Transaction Reference</th>
+        </tr>
+
+        {% for refund in refunds %}
+        <tr>
+            <td>{{ refund.refund_id }}</td>
+            <td>{{ refund.return_request.return_id }}</td>
+            <td>₹{{ refund.amount }}</td>
+            <td>{{ refund.refund_date|default:"Not processed" }}</td>
+            <td>{{ refund.status }}</td>
+            <td>{{ refund.transaction_reference|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No refunds found.</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <br>
+    <a href="/dashboard/">Back to Dashboard</a>
+
+</body>
+</html>

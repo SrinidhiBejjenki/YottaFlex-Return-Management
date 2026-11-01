@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReverseFlow  Returns</title>
+</head>
+<body>
+
+    <h1>Return Requests</h1>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Return ID</th>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Request Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+        </tr>
+
+        {% for item in returns %}
+        <tr>
+            <td>{{ item.return_id }}</td>
+            <td>{{ item.order.order_id }}</td>
+            <td>{{ item.order.customer.name }}</td>
+            <td>{{ item.request_date }}</td>
+            <td>{{ item.reason }}</td>
+            <td>{{ item.status }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No return requests found.</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <br>
+    <a href="/dashboard/">Back to Dashboard</a>
+
+</body>
+</html>
