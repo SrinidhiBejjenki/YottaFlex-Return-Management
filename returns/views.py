@@ -18,7 +18,7 @@ def home(request):
 def customer_list(request):
     customers = Customer.objects.all()
 
-    return render(request, 'customers.html', {
+    return render(request, 'customer.html', {
         'customers': customers
     })
 
@@ -36,7 +36,7 @@ def order_list(request):
 def order_detail(request, order_id):
     order = get_object_or_404(Order, order_id=order_id)
 
-    return render(request, 'order_detail.html', {
+    return render(request, 'order_details.html', {
         'order': order
     })
 

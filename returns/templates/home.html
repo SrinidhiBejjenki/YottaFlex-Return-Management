@@ -1,18 +1,69 @@
 
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ReturnFlow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReturnFlow
+    </title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <h1>Reverse Flow</h1>
+    <header>
+        <a href="/" class="logo">
+            <span class="logo-icon">R</span>
+            <span>ReturnFlow</span>
+        </a>
+        <p>Smart Return Management System</p>
+    </header>
 
-    <h2>Smart Return Management System</h2>
+    <main class="container">
+        <section class="card">
+            <h2>Welcome to ReturnFlow</h2>
 
-    <p>Manage product returns, inspections, refunds, and inventory efficiently.</p>
+            <p>
+                Simplify and streamline your product return operations
+                with a centralized return management system.
+                Manage return requests, product inspections, refunds,
+                and inventory efficiently.
+            </p>
 
-    <a href="/dashboard/">Go to Dashboard</a>
+            <br>
+
+            <a href="/dashboard/" class="btn">
+                Go to Dashboard →
+            </a>
+        </section>
+
+        <section class="features">
+            <div class="card">
+                <h3>Customer Management</h3>
+                <p>Access and manage customer information.</p>
+            </div>
+
+            <div class="card">
+                <h3>Order Tracking</h3>
+                <p>View orders and their associated details.</p>
+            </div>
+
+            <div class="card">
+                <h3>Return Management</h3>
+                <p>Track return requests and inspections.</p>
+            </div>
+
+            <div class="card">
+                <h3>Refund Processing</h3>
+                <p>Monitor refund records and status.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>ReturnFlow | Smart Return Management System</p>
+    </footer>
 
 </body>
 </html>
+```

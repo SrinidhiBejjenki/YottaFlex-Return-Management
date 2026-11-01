@@ -1,33 +1,80 @@
-```html
+
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ReverseFlow Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReturnFlow Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <h1>ReverseFlow Dashboard</h1>
+    <header>
+        <a href="/" class="logo">
+            <span class="logo-icon">R</span>
+            <span>ReturnFlow</span>
+        </a>
+        <p>Smart Return Management System</p>
+    </header>
 
-    <h2>Overview</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/customers/">Customers</a>
+        <a href="/orders/">Orders</a>
+        <a href="/returns/">Returns</a>
+        <a href="/refunds/">Refunds</a>
+    </nav>
 
-    <p>Total Customers: {{ total_customers }}</p>
-    <p>Total Orders: {{ total_orders }}</p>
-    <p>Total Returns: {{ total_returns }}</p>
-    <p>Total Refunds: {{ total_refunds }}</p>
+    <main class="container">
 
-    <hr>
+        <h2>Dashboard Overview</h2>
+        <p>Monitor your return management operations at a glance.</p>
 
-    <h2>Manage ReverseFlow</h2>
+        <section class="dashboard-cards">
 
-    <ul>
-        <li><a href="/customers/">View Customers</a></li>
-        <li><a href="/orders/">View Orders</a></li>
-        <li><a href="/returns/">View Returns</a></li>
-        <li><a href="/refunds/">View Refunds</a></li>
-    </ul>
+            <div class="stat-card">
+                <h3>Total Customers</h3>
+                <p>{{ total_customers }}</p>
+            </div>
 
-    <a href="/">Back to Home</a>
+            <div class="stat-card">
+                <h3>Total Orders</h3>
+                <p>{{ total_orders }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Returns</h3>
+                <p>{{ total_returns }}</p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Refunds</h3>
+                <p>{{ total_refunds }}</p>
+            </div>
+
+        </section>
+
+        <section class="card management-section">
+            <h2>Manage ReturnFlow</h2>
+            <p>Select a section to view and manage records.</p>
+
+            <div class="management-links">
+                <a href="/customers/" class="btn">View Customers</a>
+                <a href="/orders/" class="btn">View Orders</a>
+                <a href="/returns/" class="btn">View Returns</a>
+                <a href="/refunds/" class="btn">View Refunds</a>
+            </div>
+        </section>
+
+        <a href="/" class="back-link">← Back to Home</a>
+
+    </main>
+
+    <footer>
+        <p>ReturnFlow | Smart Return Management System</p>
+    </footer>
 
 </body>
 </html>
-```

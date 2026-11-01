@@ -1,41 +1,48 @@
-```html
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ReverseFlow - Customers</title>
+    <title>ReturnFlow Customers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-    <h1>Customer Details</h1>
+    <header>
+        <a href="/" class="logo">
+            <span class="logo-icon">R</span>
+            <span>ReturnFlow</span>
+        <p>Smart Return Management System</p>
+        </a>
+    </header>
 
-    <table border="1" cellpadding="10">
+    <div class="container">
+        <h2>Customer Details</h2>
 
-        <tr>
-            <th>Customer ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-        </tr>
+        <table>
+            <tr>
+                <th>Customer ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
 
-        {% for customer in customers %}
-        <tr>
-            <td>{{ customer.customer_id }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.email }}</td>
-            <td>{{ customer.phone }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">No customers found.</td>
-        </tr>
-        {% endfor %}
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.customer_id }}</td>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No customers found.</td>
+            </tr>
+            {% endfor %}
+        </table>
 
-    </table>
-
-    <br>
-
-    <a href="/dashboard/">Back to Dashboard</a>
+        <br>
+        <a href="/dashboard/" class="btn">Back to Dashboard</a>
+    </div>
 
 </body>
 </html>
-```
