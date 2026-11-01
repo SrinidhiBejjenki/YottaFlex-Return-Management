@@ -1,0 +1,6 @@
+return_id,issue_type,expected_decision,details,created_at
+RMA-2026-000001,EXCESS_RETURN_QUANTITY,REJECT_EXCESS_QUANTITY,Return quantity exceeds purchased quantity.,2026-11-01 13:01:02.115777+00:00
+RMA-2026-000002,EXCESS_REFUND,BLOCK_REFUND,Refund amount exceeds the recorded order total.,2026-11-01 13:01:02.142823+00:00
+RMA-2026-000003,RESTOCK_BEFORE_INSPECTION,BLOCK_RESTOCK,Restock record occurs before inspection.,2026-11-01 13:01:02.186278+00:00
+RMA-2026-000004,LATE_RETURN,REJECT_WITHOUT_OVERRIDE,Return requested 31 days after order date; assumed policy is 30 days.,2026-11-01 13:01:02.198333+00:00
+RMA-2026-000005,DUPLICATE_REFUND,BLOCK_DUPLICATE_PAYOUT,A second refund was attempted and marked as blocked.,2026-11-01 13:01:02.214277+00:00

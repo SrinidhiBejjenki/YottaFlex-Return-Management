@@ -132,3 +132,25 @@ class ReturnEvent(models.Model):
     description = models.TextField(blank=True)
     actor = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class GroundTruth(models.Model):
+    return_request = models.ForeignKey(
+        ReturnRequest,
+        on_delete=models.CASCADE,
+        related_name="ground_truth_labels"
+    )
+
+    issue_type = models.CharField(max_length=100)
+
+    expected_decision = models.CharField(max_length=100)
+
+    details = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return (
+            f"{self.return_request.return_id} - "
+            f"{self.issue_type}"
+        )

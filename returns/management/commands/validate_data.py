@@ -2,7 +2,6 @@
 from collections import defaultdict
 
 from django.core.management.base import BaseCommand
-from django.db.models import Sum
 
 from returns.models import (
     Customer,
@@ -16,6 +15,7 @@ from returns.models import (
     Refund,
     InventoryDisposition,
     ReturnEvent,
+    GroundTruth,
 )
 
 
@@ -25,6 +25,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         errors = 0
         warnings = 0
+        expected_anomalies = 0
 
         def error(message):
             nonlocal errors
@@ -35,6 +36,13 @@ class Command(BaseCommand):
             nonlocal warnings
             warnings += 1
             self.stdout.write(self.style.WARNING(f"WARNING: {message}"))
+
+        def expected(message):
+            nonlocal expected_anomalies
+            expected_anomalies += 1
+            self.stdout.write(
+                self.style.WARNING(f"EXPECTED ANOMALY: {message}")
+            )
 
         self.stdout.write("Starting ReturnFlow validation...\n")
 
@@ -85,12 +93,13 @@ class Command(BaseCommand):
                     f"{invalid_count} invalid relationships"
                 )
 
-        # 3. Return quantity checks across all requests
+        # 3. Return quantity checks
         returned_quantities = defaultdict(int)
 
         for line in ReturnLine.objects.select_related(
-            "order_line"
+            "order_line", "return_request"
         ).iterator():
+
             if line.quantity <= 0:
                 error(f"Non-positive return quantity in ReturnLine {line.pk}")
                 continue
@@ -98,15 +107,25 @@ class Command(BaseCommand):
             returned_quantities[line.order_line_id] += line.quantity
 
         for order_line_id, returned_qty in returned_quantities.items():
-            purchased_qty = OrderLine.objects.get(
-                pk=order_line_id
-            ).quantity
+            order_line = OrderLine.objects.get(pk=order_line_id)
+            purchased_qty = order_line.quantity
 
             if returned_qty > purchased_qty:
-                error(
-                    f"OrderLine {order_line_id}: returned {returned_qty}, "
-                    f"purchased {purchased_qty}"
-                )
+                labelled = GroundTruth.objects.filter(
+                    return_request__return_lines__order_line_id=order_line_id,
+                    issue_type="EXCESS_RETURN_QUANTITY",
+                ).exists()
+
+                if labelled:
+                    expected(
+                        f"OrderLine {order_line_id}: returned {returned_qty}, "
+                        f"purchased {purchased_qty}"
+                    )
+                else:
+                    error(
+                        f"OrderLine {order_line_id}: returned {returned_qty}, "
+                        f"purchased {purchased_qty}"
+                    )
 
         # 4. Refund amount checks
         for refund in Refund.objects.select_related(
@@ -124,7 +143,21 @@ class Command(BaseCommand):
             )
 
             if refund.amount != expected_amount:
-                error(f"Refund amount mismatch: {refund.refund_id}")
+                labelled = GroundTruth.objects.filter(
+                    return_request=refund.return_request,
+                    issue_type__in=[
+                        "EXCESS_REFUND",
+                        "DUPLICATE_REFUND",
+                        "EXCESS_RETURN_QUANTITY",
+                    ],
+                ).exists()
+
+                if labelled:
+                    expected(
+                        f"Refund amount mismatch: {refund.refund_id}"
+                    )
+                else:
+                    error(f"Refund amount mismatch: {refund.refund_id}")
 
         # 5. Authorization dates
         for authorization in ReturnAuthorization.objects.select_related(
@@ -150,7 +183,7 @@ class Command(BaseCommand):
             ):
                 error(f"Shipment date order invalid: {shipment.shipment_id}")
 
-        # 7. Inspection and disposition relationships
+        # 7. Inspection and disposition checks
         for disposition in InventoryDisposition.objects.select_related(
             "inspection", "return_line"
         ).iterator():
@@ -165,20 +198,40 @@ class Command(BaseCommand):
             ):
                 error(f"Disposition inspection mismatch: {disposition.pk}")
 
+            if (
+                disposition.disposition_type == "RESTOCK"
+                and disposition.inspection is None
+                and disposition.notes.startswith("EDGE_CASE:")
+            ):
+                labelled = GroundTruth.objects.filter(
+                    return_request=disposition.return_line.return_request,
+                    issue_type="RESTOCK_BEFORE_INSPECTION",
+                ).exists()
+
+                if labelled:
+                    expected(
+                        f"Restock before inspection: {disposition.pk}"
+                    )
+                else:
+                    error(
+                        f"Restock before inspection: {disposition.pk}"
+                    )
+
         # 8. Final report
         self.stdout.write("\n--- VALIDATION SUMMARY ---")
         self.stdout.write(f"Errors: {errors}")
         self.stdout.write(f"Warnings: {warnings}")
+        self.stdout.write(f"Expected anomalies: {expected_anomalies}")
 
         if errors == 0:
             self.stdout.write(
                 self.style.SUCCESS(
-                    "Validation completed with no detected errors."
+                    "Validation completed with no unexpected errors."
                 )
             )
         else:
             self.stdout.write(
                 self.style.ERROR(
-                    "Validation failed. Fix the reported errors."
+                    "Validation failed. Fix unexpected errors."
                 )
             )

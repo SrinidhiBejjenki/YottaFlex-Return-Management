@@ -19,12 +19,13 @@ from returns.models import (
     Refund,
     InventoryDisposition,
     ReturnEvent,
+    GroundTruth,
 )
 
 
 class Command(BaseCommand):
 
-    help = "Export ReverseFlow database records to CSV and JSON"
+    help = "Export ReturnFlow database records to CSV and JSON"
 
     def add_arguments(self, parser):
 
@@ -40,10 +41,10 @@ class Command(BaseCommand):
         export_format = options["format"]
 
         # Create exports folder
-
         export_folder = Path(settings.BASE_DIR) / "exports"
         export_folder.mkdir(parents=True, exist_ok=True)
 
+        # Normal input datasets
         models = [
             Customer,
             Order,
@@ -58,6 +59,7 @@ class Command(BaseCommand):
             ReturnEvent,
         ]
 
+        # Export normal datasets
         for model in models:
 
             model_name = model.__name__.lower()
@@ -79,7 +81,6 @@ class Command(BaseCommand):
                 records.append(record)
 
             # Export CSV
-
             if export_format in ["csv", "both"]:
 
                 csv_path = export_folder / f"{model_name}.csv"
@@ -104,7 +105,6 @@ class Command(BaseCommand):
                 )
 
             # Export JSON
-
             if export_format in ["json", "both"]:
 
                 json_path = export_folder / f"{model_name}.json"
@@ -125,6 +125,75 @@ class Command(BaseCommand):
                 self.stdout.write(
                     f"JSON exported: {json_path.name}"
                 )
+
+        # Export GroundTruth separately
+        ground_truth_records = []
+
+        for item in GroundTruth.objects.select_related(
+            "return_request"
+        ).all():
+
+            ground_truth_records.append({
+                "return_id": item.return_request.return_id,
+                "issue_type": item.issue_type,
+                "expected_decision": item.expected_decision,
+                "details": item.details,
+                "created_at": item.created_at,
+            })
+
+        ground_truth_fields = [
+            "return_id",
+            "issue_type",
+            "expected_decision",
+            "details",
+            "created_at",
+        ]
+
+        # GroundTruth CSV
+        if export_format in ["csv", "both"]:
+
+            csv_path = export_folder / "ground_truth.csv"
+
+            with open(
+                csv_path,
+                "w",
+                newline="",
+                encoding="utf-8"
+            ) as file:
+
+                writer = csv.DictWriter(
+                    file,
+                    fieldnames=ground_truth_fields
+                )
+
+                writer.writeheader()
+                writer.writerows(ground_truth_records)
+
+            self.stdout.write(
+                "CSV exported: ground_truth.csv"
+            )
+
+        # GroundTruth JSON
+        if export_format in ["json", "both"]:
+
+            json_path = export_folder / "ground_truth.json"
+
+            with open(
+                json_path,
+                "w",
+                encoding="utf-8"
+            ) as file:
+
+                json.dump(
+                    ground_truth_records,
+                    file,
+                    indent=4,
+                    default=str
+                )
+
+            self.stdout.write(
+                "JSON exported: ground_truth.json"
+            )
 
         self.stdout.write(
             self.style.SUCCESS(

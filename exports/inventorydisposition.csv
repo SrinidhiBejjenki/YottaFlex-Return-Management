@@ -7999,3 +7999,4 @@ id,return_line_id,inspection_id,disposition_type,quantity,processed_date,notes
 8007,16015,8007,QUARANTINE,1,2026-11-01 03:58:24.677206+00:00,Disposition based on inspection result.
 8008,16016,8008,QUARANTINE,1,2026-11-01 03:58:24.677221+00:00,Disposition based on inspection result.
 8009,16017,8009,QUARANTINE,1,2026-11-01 03:58:24.677237+00:00,Disposition based on inspection result.
+8010,8021,,RESTOCK,1,2026-10-31 03:58:22.201670+00:00,EDGE_CASE: Restock attempted before inspection.

@@ -44998,5 +44998,23 @@
         "refund_date": "2026-07-09 00:00:00+00:00",
         "status": "PROCESSED",
         "transaction_reference": "TXN-00005000"
+    },
+    {
+        "id": 5007,
+        "refund_id": "RDP-026-000002",
+        "return_request_id": 5014,
+        "amount": "40501.00",
+        "refund_date": null,
+        "status": "BLOCKED",
+        "transaction_reference": "EXCESS-REFUND-ATTEMPT"
+    },
+    {
+        "id": 5008,
+        "refund_id": "REF-EDGE-DUP-RMA-2026-000005",
+        "return_request_id": 5017,
+        "amount": "32000.00",
+        "refund_date": "2026-01-21 00:00:00+00:00",
+        "status": "BLOCKED_DUPLICATE",
+        "transaction_reference": "DUPLICATE-REFUND-ATTEMPT"
     }
 ]

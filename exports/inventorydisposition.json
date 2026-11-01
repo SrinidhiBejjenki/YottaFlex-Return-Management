@@ -71998,5 +71998,14 @@
         "quantity": 1,
         "processed_date": "2026-11-01 03:58:24.677237+00:00",
         "notes": "Disposition based on inspection result."
+    },
+    {
+        "id": 8010,
+        "return_line_id": 8021,
+        "inspection_id": null,
+        "disposition_type": "RESTOCK",
+        "quantity": 1,
+        "processed_date": "2026-10-31 03:58:22.201670+00:00",
+        "notes": "EDGE_CASE: Restock attempted before inspection."
     }
 ]
