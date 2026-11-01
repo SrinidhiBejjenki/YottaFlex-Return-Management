@@ -236,8 +236,4 @@ http://127.0.0.1:8000/
 - The SQL dump represents the database at export time.
 - The project is a development and challenge implementation, not a production payment system.
 
-## 12. Author
-
-Developed as part of the YottaFlex.ai 72 Hours Code Challenge.
-
-**Project:** ReturnFlow – Return Management System
+s
